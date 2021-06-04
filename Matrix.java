@@ -46,6 +46,18 @@ public class Matrix {
                 return true;
     }
     
+    public void addRow(int a, int b) {
+    	for (int i = 0; i < rows; i++){
+            data[b][i] = (byte) ((data[b][i] + data[a][i]) % 2);
+        }
+    }
+    
+    public void addCol(int a, int b) {
+    	for (int i = 0; i < cols; i++){
+    		data[i][b] = (byte) ((data[i][b] + data[i][a]) % 2);
+        }
+    }
+    
     public void shiftRow(int a, int b){
         byte tmp = 0;
         for (int i = 0; i < cols; i++){
