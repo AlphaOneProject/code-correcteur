@@ -144,50 +144,40 @@ public class Matrix {
         return r;
     }
     
-    private int isRightIdentity() {
+    public Matrix sysTransform() {
+    	Matrix r = new Matrix(data);
+    	// With this = H & H = (L|R) & r = H' => H' = (M|id).
     	for (int i = 0; i < rows; i++) {
 			if (data[i][i + (cols - rows)] == 0) {
-				return i;
+				int target_row = i + 1;
+    			while (target_row < rows && r.getElem(target_row, i + (cols - rows)) != 1) target_row++;
+    			if (target_row < rows) {
+    				r.shiftRow(i, target_row);
+    				System.out.println("Switch rows " + i + " & " + target_row);
+    			}
+    			else {
+    				target_row = i - 1;
+    				while (target_row >= 0 && r.getElem(target_row, i + (cols - rows)) != 1) target_row--;
+    				r.addRow(target_row, i);
+    				System.out.println("Add rows " + target_row + " IN " + i);
+    			}
 			}
     	}
     	for (int i = 0; i < rows; i++) {
     		for (int j = cols - rows; j < cols; j++) {
     			if ((i <= j - (cols - rows) && data[i][j] == 1)) {
-    				return i;
+    				// Left - Bottom triangle => 0.
+    				continue;
     			}
     		}
     	}
     	for (int i = 0; i < rows; i++) {
     		for (int j = cols - rows; j < cols; j++) {
     			if ((i >= j - (cols - rows) && data[i][j] == 1)) {
-    				return i;
+    				// Right - Top triangle => 0.
+    				continue;
     			}
     		}
-    	}
-    	return -1;
-    }
-    
-    public Matrix sysTransform() {
-    	Matrix r = new Matrix(data);
-    	// With this=H & H = (L|R) & r = H' => H' = (M|id).
-    	int right_identity = isRightIdentity();
-    	while (right_identity != -1) {
-    		if (r.getElem(right_identity, right_identity + (cols - rows)) != 1) {
-    			int target_row = right_identity + 1;
-    			while (target_row < rows && r.getElem(target_row, right_identity + (cols - rows)) != 1) target_row++;
-    			if (target_row < rows) {
-    				r.shiftRow(right_identity, target_row);
-    				System.out.println("Switch rows " + right_identity + " & " + target_row);
-    			}
-    			else {
-    				target_row = right_identity - 1;
-    				while (target_row >= 0 && r.getElem(target_row, right_identity + (cols - rows)) != 1) target_row--;
-    				r.addRow(target_row, right_identity);
-    				System.out.println("Add rows " + target_row + " IN " + right_identity);
-    			}
-    			r.display();
-    		}
-    		right_identity = r.isRightIdentity();
     	}
     	return r;
     }
