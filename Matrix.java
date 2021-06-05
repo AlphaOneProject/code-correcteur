@@ -148,7 +148,7 @@ public class Matrix {
     	Matrix r = new Matrix(data);
     	// With this = H & H = (L|R) & r = H' => H' = (M|id).
     	for (int i = 0; i < rows; i++) {
-			if (data[i][i + (cols - rows)] == 0) {
+			if (r.data[i][i + (cols - rows)] == 0) {
 				int target_row = i + 1;
     			while (target_row < rows && r.getElem(target_row, i + (cols - rows)) != 1) target_row++;
     			if (target_row < rows) {
@@ -162,22 +162,11 @@ public class Matrix {
     				System.out.println("Add rows " + target_row + " IN " + i);
     			}
 			}
-    	}
-    	for (int i = 0; i < rows; i++) {
-    		for (int j = cols - rows; j < cols; j++) {
-    			if ((i <= j - (cols - rows) && data[i][j] == 1)) {
-    				// Left - Bottom triangle => 0.
-    				continue;
-    			}
-    		}
-    	}
-    	for (int i = 0; i < rows; i++) {
-    		for (int j = cols - rows; j < cols; j++) {
-    			if ((i >= j - (cols - rows) && data[i][j] == 1)) {
-    				// Right - Top triangle => 0.
-    				continue;
-    			}
-    		}
+			for (int x = i + 1; x < rows; x++) {
+				if (r.getElem(x, i + (cols - rows)) == 1) {
+					r.addRow(i, x);
+				}
+			}
     	}
     	return r;
     }
