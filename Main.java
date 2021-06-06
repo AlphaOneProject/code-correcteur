@@ -28,6 +28,6 @@ public class Main {
         //Matrix hbase = loadMatrix("data/matrix-2000-6000-5-15", 15, 20);
         Matrix hbase = loadMatrix("data/matrix-15-20-3-4", 15, 20);
         hbase.display();
-        hbase.sysTransform().display();
+        hbase.sysTransform().genG().display();
     }
 }

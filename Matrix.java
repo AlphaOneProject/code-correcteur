@@ -146,28 +146,34 @@ public class Matrix {
     
     public Matrix sysTransform() {
     	Matrix r = new Matrix(data);
-    	// With this = H & H = (L|R) & r = H' => H' = (M|id).
     	for (int i = 0; i < rows; i++) {
-			if (r.data[i][i + (cols - rows)] == 0) {
+    		// Setup the row with a '1' in the diagonal.
+			if (r.getElem(i, i + (cols - rows)) == 0) {
 				int target_row = i + 1;
     			while (target_row < rows && r.getElem(target_row, i + (cols - rows)) != 1) target_row++;
-    			if (target_row < rows) {
-    				r.shiftRow(i, target_row);
-    				System.out.println("Switch rows " + i + " & " + target_row);
-    			}
-    			else {
-    				target_row = i - 1;
-    				while (target_row >= 0 && r.getElem(target_row, i + (cols - rows)) != 1) target_row--;
-    				r.addRow(target_row, i);
-    				System.out.println("Add rows " + target_row + " IN " + i);
-    			}
+    			r.shiftRow(i, target_row);
 			}
-			for (int x = i + 1; x < rows; x++) {
-				if (r.getElem(x, i + (cols - rows)) == 1) {
-					r.addRow(i, x);
+			// Setup the bottom-left triangle with '0'.
+			for (int j = i + 1; j < rows; j++) {
+				if (r.getElem(j, i + (cols - rows)) == 1) {
+					r.addRow(i, j);
 				}
 			}
     	}
+    	// Setup the top-right triangle with '0'.
+    	for (int i = rows - 1; i > 0; i--) {
+    		for (int j = 0; j < rows; j++) {
+				if (i != j && r.getElem(j, i + (cols - rows)) == 1) {
+					r.addRow(i, j);
+				}
+			}
+    	}
+    	return r;
+    }
+    
+    public Matrix genG() {
+    	Matrix r = new Matrix(data);
+    	
     	return r;
     }
 }
