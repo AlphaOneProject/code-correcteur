@@ -172,8 +172,15 @@ public class Matrix {
     }
     
     public Matrix genG() {
-    	Matrix r = new Matrix(data);
-    	
+    	Matrix r = new Matrix((cols - rows), rows + (cols - rows));
+    	for (int i = 0; i < r.rows; i++) {
+    		r.setElem(i, i, (byte) 1);
+    	}
+    	for (int i = 0; i < r.rows; i++) {
+    		for (int j = (cols - rows); j < r.cols; j++) {
+    			r.setElem(i, j, getElem(j - (cols - rows), i));
+    		}
+    	}
     	return r;
     }
 }
