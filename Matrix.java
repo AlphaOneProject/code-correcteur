@@ -151,6 +151,7 @@ public class Matrix {
 			if (r.getElem(i, i + (cols - rows)) == 0) {
 				int target_row = i + 1;
     			while (target_row < rows && r.getElem(target_row, i + (cols - rows)) != 1) target_row++;
+    			if (target_row == rows)	throw new IllegalStateException("This matrix isn't inversible!");
     			r.shiftRow(i, target_row);
 			}
 			// Setup the bottom-left triangle with '0'.

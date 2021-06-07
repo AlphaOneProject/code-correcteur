@@ -32,5 +32,6 @@ public class Main {
         h.display();
         Matrix g = h.genG();
         g.display();
+        
     }
 }
