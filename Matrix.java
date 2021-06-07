@@ -184,5 +184,25 @@ public class Matrix {
     	}
     	return r;
     }
+    
+    public int getWC() {
+    	int max = 0;
+    	for (int i = 0; i < cols; i++) {
+    		int sum = 0;
+    		for (int j = 0; j < rows; j++) if (getElem(j, i) == 1) sum++;
+    		if (sum > max) max = sum;
+    	}
+    	return max;
+    }
+    
+    public int getWR() {
+    	int max = 0;
+    	for (int i = 0; i < rows; i++) {
+    		int sum = 0;
+    		for (int j = 0; j < cols; j++) if (getElem(i, j) == 1) sum++;
+    		if (sum > max) max = sum;
+    	}
+    	return max;
+    }
 }
 

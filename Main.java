@@ -32,6 +32,15 @@ public class Main {
         h.display();
         Matrix g = h.genG();
         g.display();
+        byte[][] alexis_tab_u = {{1, 0, 1, 0, 1}};
+        Matrix u = new Matrix(alexis_tab_u);
+        Matrix y = u.multiply(g);
+        y.display();
         
+        // Decode in progress...
+        
+        TGraph william = new TGraph(hbase, hbase.getWC(), hbase.getWR());
+        william.decode(y, 5).display();
+        william.display();
     }
 }
