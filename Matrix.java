@@ -117,8 +117,7 @@ public class Matrix {
     public Matrix add(Matrix m){
         Matrix r = new Matrix(rows,m.cols);
         
-        if ((m.rows != rows) || (m.cols != cols))
-            System.out.printf("Erreur d'addition\n");
+        if ((m.rows != rows) || (m.cols != cols)) throw new IllegalArgumentException("Erreur d'addition");
         
         for (int i = 0; i < rows; i++) 
             for (int j = 0; j < cols; j++) 
@@ -129,8 +128,7 @@ public class Matrix {
     public Matrix multiply(Matrix m){
         Matrix r = new Matrix(rows,m.cols);
         
-        if (m.rows != cols)
-            System.out.printf("Erreur de multiplication\n");
+        if (m.rows != cols) throw new IllegalArgumentException("Erreur de multiplication");
         
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < m.cols; j++) {

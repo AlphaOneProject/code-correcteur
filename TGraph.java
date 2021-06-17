@@ -59,17 +59,73 @@ public class TGraph {
 	}
 	
 	public Matrix decode(Matrix code, int rounds) {
-		Matrix x = code;
+		if (code.getCols() != n_c) throw new IllegalArgumentException("The given code is not of the expected length: " + code.getCols() + " given and " + (n_c - 1) + " expected");
+		
+		Matrix x = new Matrix(code.getRows(), code.getCols());
+		
 		// Insert code at the first column of 'right'.
-		if(code.getCols() != n_c) throw new IllegalArgumentException("The given code is not of the expected length: " + code.getCols() + " given and " + (n_c - 1) + " expected");
-		for (int i = 0; i < code.getCols(); i++) {
-			right[i][0] = code.getElem(0, i);
-		}
+		for (int i = 0; i < code.getCols(); i++) right[i][0] = code.getElem(0, i);
+		
+		int[] rules_broken = new int[x.getCols()];
+		int max_rules_broken = 0;
 		for (int round = 0; round < rounds; round++) {
-			// Calcul des parites.
-			// Colonne [0] de left.
 			
+			// Write parities in 'left[][0]'.
+			for (int i = 0; i < n_r; i++) {
+    			left[i][0] = (byte) 0; 
+    			for (int j = 1; j < w_r + 1; j++ ) {
+    				// If left[i][0] and right[left[i][j]][0] are similar:
+    				// 		left[i][0] = 0 : (0 + 0) % 2 = 0 and (1 + 1) % 2 = 0
+    				// else:
+    				// 		left[i][0] = 1
+    				left[i][0] = (left[i][0] + right[left[i][j]][0]) % 2;
+    			}
+    		}
+			
+			/*System.out.println("\nRound " + round + ": (Post parities check)");
+    		this.display();*/
+
+			// Check if rules were broken.
+			boolean valid = true;
+			int i = 0;
+			while (valid && i < n_r) {
+				if (left[i][0] != (byte) 0) valid = false;
+				i++;
+			}
+    		
+    		// If the message is valid, return it.
+    		if (valid) {
+				for (i = 0; i < n_c; i++) x.setElem(0, i, (byte) right[i][0]);
+				return x;
+    		}
+    		
+    		// Finding the maximum of rules broken.
+    		for (i = 0; i < rules_broken.length; i++) rules_broken[i] = 0;
+    		max_rules_broken = 0;
+    		for (i = 0; i < n_r; i++) {
+    			if (left[i][0] == 0) continue;
+    			for (int j = 1; j < w_r + 1; j++) rules_broken[left[i][j]]++;
+    		}
+    		for (i = 0; i < n_c; i++) {
+    			if (max_rules_broken < rules_broken[i]) max_rules_broken = rules_broken[i];
+    		}
+    		
+    		// Modify bytes having the maximum of broken rules.
+    		for(i = 0; i < n_c; i++) {
+    			if (rules_broken[i] == max_rules_broken) right[i][0] = 1 - right[i][0];
+    		}
+    		
+    		/*System.out.println("\nRound " + round + ": (Post modifications)");
+    		this.display();
+    		System.out.println("\n");*/
 		}
+		
+		// Default return: -1 matrix.
+		for (int i = 0; i < x.getRows(); i++) {
+    		for (int j = 0; j < x.getCols(); j++) {
+    			x.setElem(i, j, (byte) -1);
+    		}
+    	}
     	return x;
 	}
 }
