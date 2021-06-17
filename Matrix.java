@@ -2,6 +2,7 @@ import java.util.*;
 import java.io.*;
 
 public class Matrix {
+	private static Random random = new Random();
     private byte[][] data = null;
     private int rows = 0, cols = 0;
     
@@ -178,6 +179,19 @@ public class Matrix {
     	for (int i = 0; i < r.rows; i++) {
     		for (int j = (cols - rows); j < r.cols; j++) {
     			r.setElem(i, j, getElem(j - (cols - rows), i));
+    		}
+    	}
+    	return r;
+    }
+    
+    public Matrix errGen(int w) {
+    	Matrix r = new Matrix(1, this.getCols());
+    	int weight = 0;
+    	while (weight < w) {
+    		int i = Matrix.random.nextInt(this.getCols());
+    		if (r.getElem(0, i) == (byte) 0) {
+    			r.setElem(0, i, (byte) 1);
+    			weight++;
     		}
     	}
     	return r;
